@@ -1,6 +1,6 @@
 package project1;
 
-public class Apriori extends Handling {
+public class Apriori {
 
 
 }

@@ -17,6 +17,7 @@ public class Basket {
 		Scanner scanner = new Scanner(currentLine);
 		while (scanner.hasNext())
 			items.add(scanner.nextInt());
+		scanner.close();
 	}
 	
 	public ArrayList<Integer> getItems()
