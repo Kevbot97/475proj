@@ -12,7 +12,7 @@ public class Handling {
 	
 	
 	// initialized buffer reader before we can read
-	public void initializeBufferedReader(String inputFile) {
+	public Handling(String inputFile) {
 		try {
 			br = new BufferedReader(new FileReader("input.txt"));
 		}

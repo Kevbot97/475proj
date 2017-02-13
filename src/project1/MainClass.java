@@ -6,19 +6,17 @@ public class MainClass {
 
 	public static void main(String[] args)
 	{
-		// creates input handling
-		Handling handler = new Handling();
-		handler.initializeBufferedReader("input.txt");
-		
-		// iterates through all baskets.
-		Basket b = new Basket();
-		do {
-			try {
-				b = handler.readLine();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			System.out.println(b);
-		} while (b != null);
+		Apriori algorithm = new Apriori("input.txt");
+		try {
+			algorithm.firstPass();
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		/*
+		for (int i = 0; i < algorithm.individualItemCounts.size(); i++)
+		{
+			System.out.println(i + ": " + algorithm.individualItemCounts.get(i));
+		}*/
 	}
 }
