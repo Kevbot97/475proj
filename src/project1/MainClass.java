@@ -6,7 +6,7 @@ public class MainClass {
 
 	public static void main(String[] args)
 	{
-		Apriori algorithm = new Apriori("input.txt");
+		Apriori algorithm = new Apriori("input.txt", 10, 10);
 		try {
 			algorithm.firstPass();
 		} catch (Exception e) {
