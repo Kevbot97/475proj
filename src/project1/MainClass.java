@@ -6,17 +6,16 @@ public class MainClass {
 
 	public static void main(String[] args)
 	{
-		Apriori algorithm = new Apriori("input.txt", 10, 10);
+		Apriori algorithm = new Apriori("input_test.txt", 10, 10);
+		PCY alg2 = new PCY("input_test.txt", 10, 10);
 		try {
 			algorithm.firstPass();
+			algorithm.secondPass();
+			algorithm.test();
+			alg2.firstPass();
 		} catch (Exception e) {
 			
 			e.printStackTrace();
 		}
-		/*
-		for (int i = 0; i < algorithm.individualItemCounts.size(); i++)
-		{
-			System.out.println(i + ": " + algorithm.individualItemCounts.get(i));
-		}*/
 	}
 }

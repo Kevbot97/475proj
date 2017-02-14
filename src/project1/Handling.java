@@ -9,12 +9,24 @@ public class Handling {
 	
 	BufferedReader br;
 	Basket currentBasket;
+	String inputFile;
 	
 	
 	// initialized buffer reader before we can read
 	public Handling(String inputFile) {
+		this.inputFile = inputFile;
 		try {
-			br = new BufferedReader(new FileReader("input.txt"));
+			br = new BufferedReader(new FileReader(this.inputFile));
+		}
+		catch (Exception e){
+			System.out.println(e.getClass());
+		}
+	}
+	
+	// resets buffered reader
+	public void reset() {
+		try {
+			br = new BufferedReader(new FileReader(this.inputFile));
 		}
 		catch (Exception e){
 			System.out.println(e.getClass());
