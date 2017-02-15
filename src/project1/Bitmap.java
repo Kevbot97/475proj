@@ -13,27 +13,29 @@ public class Bitmap {
 		array = new int[size];
 	}
 	
-	public void convert(HashMap<Key, Integer> map, int supportThreshold)
+	public void convert(int[] firstPassMap, int supportThreshold)
 	{
-		 Entry[] entries = map.entrySet().toArray(new Entry[0]);
-		 for (int i = 0; i < entries.length; i++)
+		 for (int i = 0; i < firstPassMap.length; i++)
 		 {
-			 if ((Integer)(entries[i].getValue()) >= supportThreshold)
-				 this.setTrue((Key)entries[i].getKey());
+			 if (firstPassMap[i] >= supportThreshold)
+				 this.setTrue(i);
 		 }
-		 for (int i= 0; i < array.length; i++)
-		 {
-			 System.out.println(array[i]);
-		 }
-		
 	}
 	
-	public void setTrue(Key k)
+	public void setTrue(int c)
 	{	
-		int c = k.hashCode();
 		int index = c / 32;
 		int binaryPlace = c % 32;
 		
 		array[index] += Math.pow(2, binaryPlace);
+	}
+	
+	public boolean getValue(int c)
+	{
+		int index = c / 32;
+		int binaryPlace = c % 32;
+		if ( (array[index] & Math.round(Math.pow(2, binaryPlace))) > 0)
+			return true;
+		else return false;
 	}
 }

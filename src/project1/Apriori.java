@@ -1,36 +1,45 @@
 package project1;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Apriori {
 	
-	public static final int BASKETS_IN_FILE = 10;//88162;//
-	public static final int LARGEST_ITEM_IN_FILE = 15;//16470;//
+	public static final int BASKETS_IN_FILE = 88162;//
+	public static final int LARGEST_ITEM_IN_FILE = 16470;//
 	
 	protected Handling inputHandler;
 	protected int individualItemCounts[];
 	// used when only working with subsets of the data
-	protected double datasetPercent, supportThresholdPercent = 0.2;
-	protected int supportThreshold = (int) Math.round(supportThresholdPercent * BASKETS_IN_FILE);
+	protected double datasetPercent, supportThresholdPercent;
+	protected int supportThreshold ;
 	
 	HashMap<Key, Integer> pairCounts;
 
 	
-	public Apriori(String inputFileName, int percentage, int supportPercentage)
+	public Apriori(String inputFileName, double percentage, double supportPercentage)
 	{
 		inputHandler = new Handling(inputFileName);
 		datasetPercent = percentage;
 		pairCounts = new HashMap<Key, Integer>();
+		supportThresholdPercent = supportPercentage;
+		supportThreshold = (int) Math.round(supportThresholdPercent * BASKETS_IN_FILE * datasetPercent);
 	}
 	
 	public void firstPass() throws IOException
 	{
 		individualItemCounts = new int[LARGEST_ITEM_IN_FILE];
 
+		int j = 0;
 		for (Basket currentBasket = inputHandler.readLine(); currentBasket != null; currentBasket = inputHandler.readLine())
 		{
+			if (j >= (datasetPercent * BASKETS_IN_FILE))
+				break;
+			j++;
 			ArrayList<Integer> currentItems = currentBasket.getItems();
 			for (int i = 0; i < currentItems.size(); i++)
 			{
@@ -43,8 +52,12 @@ public class Apriori {
 	public void secondPass() throws IOException
 	{
 		inputHandler.reset();
+		int j = 0;
 		for (Basket currentBasket = inputHandler.readLine(); currentBasket != null; currentBasket = inputHandler.readLine())
 		{
+			if (j >= (datasetPercent * BASKETS_IN_FILE))
+				break;
+			j++;
 			ArrayList<Integer> currentItems = currentBasket.getItems();
 			for (int i = 0; i < currentItems.size(); i++)
 			{
@@ -94,11 +107,17 @@ public class Apriori {
 	}
 	
 	// prints out all pairs that were hashed
-	public void test()
+	public void test() throws IOException
 	{
+		File file = new File("output.txt");
+		FileWriter fw = new FileWriter(file);
+		PrintWriter pw = new PrintWriter(fw);
+		pw.println("Apriori, dataset size = " + datasetPercent + " support threshold = " + supportThresholdPercent);
 		Key[] keys = (Key[]) pairCounts.keySet().toArray(new Key[0]);
 		for (int i = 0; i < keys.length; i++)
 			if (pairCounts.get(keys[i]) >= supportThreshold)
-				System.out.println(keys[i] + ": " + pairCounts.get(keys[i]) );
+				pw.println(keys[i] + ": " + pairCounts.get(keys[i]) );
+
+		pw.close();
 	}
 }
