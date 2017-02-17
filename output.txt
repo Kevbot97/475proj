@@ -1,5 +1,5 @@
-Apriori, dataset size = 0.1 support threshold = 0.1
-38, 39: 1004
-39, 41: 1714
-41, 48: 1270
-39, 48: 2579
+PCY, dataset size = 1.0 support threshold = 0.1
+38, 39: 10345
+39, 41: 11414
+41, 48: 9018
+39, 48: 29142
