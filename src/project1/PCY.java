@@ -16,7 +16,9 @@ public class PCY extends Apriori {
 	public void firstPass() throws IOException
 	{
 		individualItemCounts = new int[LARGEST_ITEM_IN_FILE];
-		firstPassMap= new int[(int)(BASKETS_IN_FILE * datasetPercent * 2)];
+		firstPassMap= new int[(int)(Runtime.getRuntime().freeMemory() / 8)];
+		// make our bucketing hash table the size of our free memory / 2 
+		// (and then further divided by 4 to account for integers being 4 bytes)
 
 		int j = 0;
 		for (Basket currentBasket = inputHandler.readLine(); currentBasket != null; currentBasket = inputHandler.readLine())
@@ -36,6 +38,9 @@ public class PCY extends Apriori {
 		//convert hashmap to bitmap
 		bmp = new Bitmap(firstPassMap.length);
 		bmp.convert(firstPassMap, supportThreshold);
+		// this should cause garbage collector to clean up firstPassMap
+		firstPassMap = null;
+		
 	}
 	
 	public void addPairsToFirstPassTable(Basket currentBasket)
@@ -45,12 +50,33 @@ public class PCY extends Apriori {
 		{
 			for (int j = i + 1; j < individuals.size(); j++)
 			{
-				// pretty much the worst hash to buckets ever
-				// it just adds 1 to the table at [i+j]
-				firstPassMap[individuals.get(i).intValue() + individuals.get(j)]++;
+				// the hash to buckets is index = i * j % length of hash table
+				firstPassMap[(individuals.get(i).intValue() * individuals.get(j).intValue()) % firstPassMap.length]++;
 			}
 		}
 	}
+	
+	// addPairs builds all pairs (from an ArrayList of compatible individuals)
+		// and adds them to the pairCounts hash table
+		public void addPairs(ArrayList<Integer> individuals, HashMap<Key, Integer> map)
+		{
+			for (int i = 0; i < individuals.size() - 1; i++)
+			{
+				for (int j = i + 1; j < individuals.size(); j++)
+				{
+					if (!bmp.getValue((individuals.get(i).intValue() * individuals.get(j).intValue()) % bmp.sizeOfBuckets))
+						continue;
+					// create new key
+					Key key = new Key(individuals.get(i).intValue(), individuals.get(j).intValue());
+					
+					// add 1 to count (if count exists, otherwise, initialize it as new Integer(1))
+					Integer currentCount = map.get(key);
+					if (currentCount == null)
+						map.put(key, new Integer(1));
+					else map.put(key, new Integer(currentCount.intValue() + 1));
+				}
+			}
+		}
 	
 	
 }

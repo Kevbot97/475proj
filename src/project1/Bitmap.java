@@ -7,10 +7,12 @@ import java.util.Set;
 public class Bitmap {
 
 	public int[] array;
+	public int sizeOfBuckets;
 	
 	public Bitmap(int size)
 	{
-		array = new int[size];
+		sizeOfBuckets = size;
+		array = new int[size/32+1];
 	}
 	
 	public void convert(int[] firstPassMap, int supportThreshold)
@@ -27,7 +29,7 @@ public class Bitmap {
 		int index = c / 32;
 		int binaryPlace = c % 32;
 		
-		array[index] += Math.pow(2, binaryPlace);
+		array[index] += Math.round(Math.pow(2, binaryPlace));
 	}
 	
 	public boolean getValue(int c)

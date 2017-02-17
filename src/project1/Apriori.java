@@ -85,6 +85,7 @@ public class Apriori {
 		if (possibleFrequents.size() > 1)
 			addPairs(possibleFrequents, pairCounts);
 	}
+	
  
 	// addPairs builds all pairs (from an ArrayList of compatible individuals)
 	// and adds them to the pairCounts hash table
