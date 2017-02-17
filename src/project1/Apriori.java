@@ -9,8 +9,13 @@ import java.util.HashMap;
 
 public class Apriori {
 	
-	public static final int BASKETS_IN_FILE = 88162;//
-	public static final int LARGEST_ITEM_IN_FILE = 16470;//
+	// note: currently hardcoded to the test input file we were given.
+	// however, it can easily be adopted to do a cursory scan to check file size
+	// and largest item.
+	public static final int BASKETS_IN_FILE = 88162;
+	public static final int LARGEST_ITEM_IN_FILE = 16470;
+	
+	protected String nameOfAlgorithm = "Apriori";
 	
 	protected Handling inputHandler;
 	protected int individualItemCounts[];
@@ -113,7 +118,7 @@ public class Apriori {
 		File file = new File("output.txt");
 		FileWriter fw = new FileWriter(file);
 		PrintWriter pw = new PrintWriter(fw);
-		pw.println("Apriori, dataset size = " + datasetPercent + " support threshold = " + supportThresholdPercent);
+		pw.println(this.nameOfAlgorithm + ", dataset size = " + datasetPercent + " support threshold = " + supportThresholdPercent);
 		Key[] keys = (Key[]) pairCounts.keySet().toArray(new Key[0]);
 		for (int i = 0; i < keys.length; i++)
 			if (pairCounts.get(keys[i]) >= supportThreshold)

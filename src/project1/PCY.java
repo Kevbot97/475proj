@@ -1,17 +1,24 @@
 package project1;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class PCY extends Apriori {
 	
 	int[] firstPassMap;
 	Bitmap bmp;
+	
+	public String nameOfAlgorithm = "PCY";
 
 	public PCY(String inputFileName, double size, double supportThreshold) {
 		super(inputFileName, size, supportThreshold);
 	}
 	
+	// changed to add to hash table w/ buckets and 
+	// added conversion of hashtable to bitmap later.
 	@Override
 	public void firstPass() throws IOException
 	{
@@ -32,6 +39,7 @@ public class PCY extends Apriori {
 				// increment value
 				individualItemCounts[currentItems.get(i).intValue()]++;
 			}
+			// CHANGES HERE
 			addPairsToFirstPassTable(currentBasket);
 		}
 		
@@ -56,14 +64,14 @@ public class PCY extends Apriori {
 		}
 	}
 	
-	// addPairs builds all pairs (from an ArrayList of compatible individuals)
-		// and adds them to the pairCounts hash table
+		// basically the same as Apriori, just checks bucket bitmap first
 		public void addPairs(ArrayList<Integer> individuals, HashMap<Key, Integer> map)
 		{
 			for (int i = 0; i < individuals.size() - 1; i++)
 			{
 				for (int j = i + 1; j < individuals.size(); j++)
 				{
+					// CHANGES HERE
 					if (!bmp.getValue((individuals.get(i).intValue() * individuals.get(j).intValue()) % bmp.sizeOfBuckets))
 						continue;
 					// create new key
@@ -76,6 +84,22 @@ public class PCY extends Apriori {
 					else map.put(key, new Integer(currentCount.intValue() + 1));
 				}
 			}
+		}
+		
+		// prints out all pairs that were hashed
+		// identical to Apriori, just prints PCY instead.
+		public void test() throws IOException
+		{
+			File file = new File("output.txt");
+			FileWriter fw = new FileWriter(file);
+			PrintWriter pw = new PrintWriter(fw);
+			pw.println(this.nameOfAlgorithm + ", dataset size = " + datasetPercent + " support threshold = " + supportThresholdPercent);
+			Key[] keys = (Key[]) pairCounts.keySet().toArray(new Key[0]);
+			for (int i = 0; i < keys.length; i++)
+				if (pairCounts.get(keys[i]) >= supportThreshold)
+					pw.println(keys[i] + ": " + pairCounts.get(keys[i]) );
+
+			pw.close();
 		}
 	
 	
